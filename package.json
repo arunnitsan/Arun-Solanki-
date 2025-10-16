@@ -1,0 +1,13 @@
+{
+  "name": "arun-solanki-resume",
+  "version": "1.0.0",
+  "description": "Arun Solanki - Frontend Developer Resume",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static HTML file - no build needed'",
+    "start": "echo 'Static HTML file - no start needed'"
+  },
+  "keywords": ["resume", "frontend", "developer", "arun-solanki"],
+  "author": "Arun Solanki",
+  "license": "MIT"
+}
