@@ -1,0 +1,231 @@
+'use client';
+
+import { useRef } from 'react';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+export default function Home() {
+  const chartRef = useRef<ChartJS<'bar'>>(null);
+
+  const skillsData = {
+    labels: [
+      'HTML, CSS, SCSS', 
+      'JavaScript, TypeScript',
+      'Bootstrap & CSS Frameworks', 
+      'Senior TYPO3 Integrator', 
+      'WordPress',
+      'Git & Jira',
+      'Vercel Deployment',
+      'Accessibility (WCAG)'
+    ],
+    datasets: [{
+      label: 'Skill Level',
+      data: [9.8, 9.7, 9.5, 9.6, 8.8, 9.2, 9.0, 9.3],
+      backgroundColor: '#3585B4',
+      borderColor: '#0B2D48',
+      borderWidth: 2,
+      borderRadius: 4
+    }]
+  };
+
+  const chartOptions = {
+    indexAxis: 'y' as const,
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: function(tooltipItems: unknown[]) {
+            const item = tooltipItems[0] as { chart: { data: { labels: string[] } }; dataIndex: number };
+            const label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+              return label.join(' ');
+            }
+            return label;
+          }
+        }
+      },
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Self-Assessed Proficiency (out of 10)',
+        padding: { bottom: 20 },
+        font: { size: 14 },
+        color: '#205375'
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        grid: { display: false },
+        ticks: { color: '#205375' }
+      },
+      y: {
+        grid: { color: '#A2D2FF' },
+        ticks: { color: '#0B2D48', font: { weight: 'bold' as const } }
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#f0f8ff] text-[#0B2D48] antialiased">
+      <div className="container mx-auto p-4 md:p-8 max-w-6xl">
+        
+        {/* Header */}
+        <header className="text-center my-12 md:my-16">
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight">ARUN SOLANKI</h1>
+          <p className="text-xl md:text-2xl font-semibold text-[#205375] mt-3">Frontend Team Leader</p>
+        </header>
+
+        {/* Overview Section */}
+        <section id="overview" className="mb-20 md:mb-24">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <h2 className="text-3xl font-bold text-center mb-4">Career at a Glance</h2>
+            <p className="text-center max-w-3xl mx-auto text-[#205375] mb-10">
+              Serving as a Frontend Team Leader at NITSAN TECHNOLOGY, I specialize in scalable applications using TYPO3, React.js, and TypeScript, delivering secure, responsive, and complex digital solutions while leading a team of developers.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+              <div className="bg-[#f0f8ff] p-8 rounded-lg">
+                <p className="text-6xl font-bold text-[#3585B4]">6+</p>
+                <p className="text-xl font-semibold text-[#205375] mt-2">Years of Experience</p>
+              </div>
+              <div className="bg-[#f0f8ff] p-8 rounded-lg">
+                <p className="text-6xl font-bold text-[#3585B4]">★</p>
+                <p className="text-xl font-semibold text-[#205375] mt-2">Shining Star of the Year (2023)</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <main className="space-y-20 md:space-y-24">
+          {/* Skills Section */}
+          <section id="skills">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Core Competencies</h2>
+            <p className="text-center max-w-3xl mx-auto text-[#205375] mb-10">
+              This chart breaks down my technical skills, highlighting a primary expertise in Core Web Technologies and TYPO3 CMS, complemented by strong capabilities in modern JavaScript frameworks and accessibility standards.
+            </p>
+            <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+              <div className="relative w-full max-w-4xl mx-auto h-[500px] md:h-[450px]">
+                <Bar ref={chartRef} data={skillsData} options={chartOptions} />
+              </div>
+            </div>
+          </section>
+
+          {/* Experience Section */}
+          <section id="experience">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">Professional Journey</h2>
+            <p className="text-center max-w-3xl mx-auto text-[#205375] mb-12">
+              My professional career has been dedicated to growing with NITSAN TECHNOLOGY, where I have progressed from Junior Developer to Frontend Team Leader. This timeline highlights key responsibilities and achievements during my tenure.
+            </p>
+            <div className="max-w-3xl mx-auto">
+              <div className="relative pl-8">
+                <div className="absolute left-[-21px] top-4 bottom-4 w-1 bg-[#A2D2FF] -z-10"></div>
+                <div className="space-y-12">
+                  
+                  {/* Team Leader */}
+                  <div className="relative">
+                    <div className="absolute left-[-31px] top-1 w-[21px] h-[21px] rounded-full bg-[#205375] border-4 border-[#A2D2FF]"></div>
+                    <p className="font-semibold text-lg text-[#3585B4]">2024 – Current</p>
+                    <h3 className="text-2xl font-bold">Frontend Team Leader</h3>
+                    <p className="font-medium text-slate-500 mb-4">NITSAN TECHNOLOGY, Bhavnagar</p>
+                    <ul className="list-disc list-inside text-[#205375] space-y-2">
+                      <li>Leading a team of frontend developers and coordinating project deliverables across multiple client projects.</li>
+                      <li>Mentoring junior developers and establishing coding standards and best practices for the team.</li>
+                      <li>Managing project timelines and ensuring quality delivery of complex TYPO3 and React applications.</li>
+                      <li>Collaborating with stakeholders to define technical requirements and architecture decisions.</li>
+                    </ul>
+                  </div>
+
+                  {/* Super Senior */}
+                  <div className="relative">
+                    <div className="absolute left-[-31px] top-1 w-[21px] h-[21px] rounded-full bg-[#205375] border-4 border-[#A2D2FF]"></div>
+                    <p className="font-semibold text-lg text-[#3585B4]">Aug 2023 – 2024</p>
+                    <h3 className="text-2xl font-bold">Super Senior Frontend Developer</h3>
+                    <p className="font-medium text-slate-500 mb-4">NITSAN TECHNOLOGY, Bhavnagar</p>
+                    <ul className="list-disc list-inside text-[#205375] space-y-2">
+                      <li>Developed complex TYPO3 extensions including T3AI, T3AC, T3AA, and TAL for enhanced CMS functionality.</li>
+                      <li>Architected and built high-performance accessibility audit tools with Vite and TypeScript.</li>
+                      <li>Led development of customer projects including HDNET and EnviTech with custom TYPO3 integrations.</li>
+                      <li>Implemented advanced SCSS architecture and component-based development workflows.</li>
+                    </ul>
+                  </div>
+
+                  {/* Senior */}
+                  <div className="relative">
+                    <div className="absolute left-[-31px] top-1 w-[21px] h-[21px] rounded-full bg-[#205375] border-4 border-[#A2D2FF]"></div>
+                    <p className="font-semibold text-lg text-[#3585B4]">Jan 2022 – Aug 2023</p>
+                    <h3 className="text-2xl font-bold">Senior Frontend Developer</h3>
+                    <p className="font-medium text-slate-500 mb-4">NITSAN TECHNOLOGY, Bhavnagar</p>
+                    <ul className="list-disc list-inside text-[#205375] space-y-2">
+                      <li>Developed dynamic web applications using React, Vue.js, and TypeScript for interactive user experiences.</li>
+                      <li>Built T3Planet e-commerce platform with deep TYPO3 CMS integration and custom extensions.</li>
+                      <li>Created Accesstive accessibility widget and live audit tools for WCAG compliance testing.</li>
+                      <li>Collaborated with UI/UX designers to translate wireframes into pixel-perfect, responsive interfaces.</li>
+                    </ul>
+                  </div>
+
+                  {/* Junior */}
+                  <div className="relative">
+                    <div className="absolute left-[-31px] top-1 w-[21px] h-[21px] rounded-full bg-[#205375] border-4 border-[#A2D2FF]"></div>
+                    <p className="font-semibold text-lg text-[#3585B4]">June 2019 – Jan 2022</p>
+                    <h3 className="text-2xl font-bold">Junior Frontend Developer</h3>
+                    <p className="font-medium text-slate-500 mb-4">NITSAN TECHNOLOGY, Bhavnagar</p>
+                    <ul className="list-disc list-inside text-[#205375] space-y-2">
+                      <li>Developed responsive websites using HTML, CSS, JavaScript, and Bootstrap frameworks.</li>
+                      <li>Customized WordPress projects with Elementor Pro for client-specific requirements.</li>
+                      <li>Learned TYPO3 CMS fundamentals and contributed to various client projects.</li>
+                      <li>Participated in code reviews and adopted Git version control and Jira project management.</li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Projects Section */}
+          <section id="projects">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Project Showcase</h2>
+            <p className="text-center max-w-3xl mx-auto text-[#205375] mb-10">
+              The following achievements were completed as part of my continuous role at NITSAN TECHNOLOGY, showcasing a diverse range of capabilities from enterprise TYPO3 solutions to accessibility tools and customer projects.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-white p-6 rounded-lg shadow-md transition hover:shadow-xl hover:-translate-y-1">
+                <h3 className="font-bold text-xl mb-2 text-[#0B2D48]">T3Planet</h3>
+                <p className="text-[#205375]">E-commerce platform for TYPO3 products with deep CMS integration, custom extensions, and responsive design.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md transition hover:shadow-xl hover:-translate-y-1">
+                <h3 className="font-bold text-xl mb-2 text-[#0B2D48]">Accesstive Accessibility Widget</h3>
+                <p className="text-[#205375]">High-performance accessibility widget with live audit capabilities for real-time WCAG compliance testing.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md transition hover:shadow-xl hover:-translate-y-1">
+                <h3 className="font-bold text-xl mb-2 text-[#0B2D48]">TYPO3 Extensions Suite</h3>
+                <p className="text-[#205375]">Developed multiple TYPO3 extensions including T3AI, T3AC, T3AA, and TAL for enhanced CMS functionality.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md transition hover:shadow-xl hover:-translate-y-1">
+                <h3 className="font-bold text-xl mb-2 text-[#0B2D48]">HDNET Client Project</h3>
+                <p className="text-[#205375]">Large-scale client project with complex TYPO3 integrations, custom frontend components, and responsive design.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md transition hover:shadow-xl hover:-translate-y-1">
+                <h3 className="font-bold text-xl mb-2 text-[#0B2D48]">EnviTech Client Project</h3>
+                <p className="text-[#205375]">Environmental technology company website with custom TYPO3 development and modern frontend architecture.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md transition hover:shadow-xl hover:-translate-y-1">
+                <h3 className="font-bold text-xl mb-2 text-[#0B2D48]">Accesstive Live Audit</h3>
+                <p className="text-[#205375]">Real-time accessibility auditing tool with comprehensive WCAG compliance reporting and dashboard analytics.</p>
+              </div>
+        </div>
+          </section>
+      </main>
+
+        {/* Footer */}
+        <footer className="text-center border-t border-[#A2D2FF] pt-8 mt-20">
+          <p className="text-slate-500">&copy; 2025 Arun Solanki. Interactive Infographic Resume.</p>
+      </footer>
+      </div>
+    </div>
+  );
+}
