@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== ADVANCED SCSS ARCHITECTURE ===== */
-
 /* CSS Custom Properties - Design System */
 :root {
   /* Sophisticated Color System for B&W Image */

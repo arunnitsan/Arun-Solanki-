@@ -8,7 +8,7 @@ interface ProfessionalImageProps {
   size?: 'small' | 'medium' | 'large' | 'xl';
 }
 
-export default function ProfessionalImage({ className = '', size = 'large' }: ProfessionalImageProps) {
+export default function ProfessionalImage({ className = '', size = 'xl' }: ProfessionalImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const sizeClasses = {

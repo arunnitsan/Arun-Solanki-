@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
 import SkillsSection from '@/components/SkillsSection';
@@ -9,25 +10,37 @@ import ProjectsSection from '@/components/ProjectsSection';
 import EducationContactSection from '@/components/EducationContactSection';
 import ScrollProgress from '@/components/ScrollProgress';
 
-export default function Home() {
+// Disable SSR to prevent hydration mismatches with browser extensions
+const NoSSR = dynamic(() => Promise.resolve(HomeComponent), { ssr: false });
+
+function HomeComponent() {
   const [activeSection, setActiveSection] = useState('overview');
-  const [isLoaded, setIsLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isScrolling, setIsScrolling] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Client-side hydration check - prevents hydration mismatches
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Mouse tracking for interactive effects
   useEffect(() => {
+    if (!isClient) return;
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [isClient]);
 
   // Scroll handling with debouncing
   useEffect(() => {
+    if (!isClient) return;
+    
     const handleScroll = () => {
       setIsScrolling(true);
       
@@ -61,44 +74,53 @@ export default function Home() {
         clearTimeout(scrollTimeoutRef.current);
       }
     };
-  }, []);
+  }, [isClient]);
 
-  // Loading effect with staggered animation
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+  // Show loading state during hydration to prevent mismatches
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white antialiased flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white/80">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 
       className={`min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white antialiased transition-all duration-1000 ${
-        isLoaded ? 'opacity-100' : 'opacity-0'
-      } ${isScrolling ? 'scroll-smooth' : ''}`}
+        isScrolling ? 'scroll-smooth' : ''
+      }`}
       data-theme="dark"
+      suppressHydrationWarning={true}
     >
       {/* Advanced Animated Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Dynamic Gradient Orbs */}
-        <div 
-          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
-          style={{
-            transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
-          }}
-        ></div>
-        <div 
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-slate-600 to-gray-700 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse"
-          style={{
-            transform: `translate(${mousePosition.x * -0.01}px, ${mousePosition.y * -0.01}px)`,
-          }}
-        ></div>
-        <div 
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse"
-          style={{
-            transform: `translate(${mousePosition.x * 0.005}px, ${mousePosition.y * 0.005}px)`,
-          }}
-        ></div>
+        {isClient && (
+          <>
+            <div 
+              className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+              style={{
+                transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
+              }}
+            ></div>
+            <div 
+              className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-slate-600 to-gray-700 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse"
+              style={{
+                transform: `translate(${mousePosition.x * -0.01}px, ${mousePosition.y * -0.01}px)`,
+              }}
+            ></div>
+            <div 
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse"
+              style={{
+                transform: `translate(${mousePosition.x * 0.005}px, ${mousePosition.y * 0.005}px)`,
+              }}
+            ></div>
+          </>
+        )}
         
         {/* Animated Grid Pattern */}
         <div className="absolute inset-0 opacity-20">
@@ -136,14 +158,17 @@ export default function Home() {
         ></div>
 
         {/* Interactive Mouse Follower */}
-        <div 
-          className="absolute w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full filter blur-xl pointer-events-none transition-all duration-300 ease-out"
-          style={{
-            left: mousePosition.x - 64,
-            top: mousePosition.y - 64,
-            opacity: isScrolling ? 0.3 : 0.6,
-          }}
-        ></div>
+        {/* Interactive Mouse Cursor Effect */}
+        {isClient && (
+          <div 
+            className="absolute w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full filter blur-xl pointer-events-none transition-all duration-300 ease-out"
+            style={{
+              left: mousePosition.x - 64,
+              top: mousePosition.y - 64,
+              opacity: isScrolling ? 0.3 : 0.6,
+            }}
+          ></div>
+        )}
       </div>
 
       {/* Advanced Navigation */}
@@ -177,7 +202,7 @@ export default function Home() {
         </div>
 
         {/* Advanced Footer */}
-        <footer className="py-16 text-center animate-fade-in" style={{ animationDelay: '1s' }}>
+        <footer className="py-16 text-center animate-fade-in" style={{ animationDelay: '1s' }} suppressHydrationWarning={true}>
           <div className="glass-card p-8 relative overflow-hidden group">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
@@ -244,3 +269,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default NoSSR;

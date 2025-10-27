@@ -8,7 +8,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ id }: HeroSectionProps) {
   return (
-    <section id={id} className="py-20 md:py-32 relative z-10">
+    <section id={id} className="py-20 md:py-32 relative z-10" suppressHydrationWarning={true}>
       <div className="text-center mb-16">
         {/* Professional Image */}
         <div className="mb-12">

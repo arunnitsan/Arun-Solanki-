@@ -150,7 +150,7 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
   };
 
   return (
-    <section id={id} className="py-20 relative z-10">
+    <section id={id} className="py-20 relative z-10" suppressHydrationWarning={true}>
       <div className="text-center mb-16">
         <h2 className="text-4xl md:text-5xl font-bold mb-6">
           <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
