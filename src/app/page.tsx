@@ -1,28 +1,44 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, DoughnutController, ArcElement } from 'chart.js';
-import { Bar, Doughnut } from 'react-chartjs-2';
-
-// Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, DoughnutController, ArcElement);
+import { useState, useEffect, useRef } from 'react';
+import Navigation from '@/components/Navigation';
+import HeroSection from '@/components/HeroSection';
+import SkillsSection from '@/components/SkillsSection';
+import ExperienceSection from '@/components/ExperienceSection';
+import ProjectsSection from '@/components/ProjectsSection';
+import EducationContactSection from '@/components/EducationContactSection';
+import ScrollProgress from '@/components/ScrollProgress';
 
 export default function Home() {
-  const chartRef = useRef<ChartJS<'bar'>>(null);
   const [activeSection, setActiveSection] = useState('overview');
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Smooth scroll to section
-  const scrollToSection = (sectionId: string) => {
-    setActiveSection(sectionId);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+  // Mouse tracking for interactive effects
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
 
-  // Handle scroll for navigation highlighting
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Scroll handling with debouncing
   useEffect(() => {
     const handleScroll = () => {
+      setIsScrolling(true);
+      
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+      
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+
       const sections = ['overview', 'skills', 'experience', 'projects', 'education', 'contact'];
       const scrollPosition = window.scrollY + 100;
 
@@ -38,778 +54,193 @@ export default function Home() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
   }, []);
 
-  // Enhanced skills data with more comprehensive categories
-  const skillsData = {
-    labels: [
-      'HTML5, CSS3, SCSS', 
-      'JavaScript, TypeScript',
-      'React.js, Next.js', 
-      'TYPO3 CMS Integration', 
-      'Bootstrap, Tailwind CSS',
-      'Git, GitHub, Jira',
-      'Vercel, Netlify',
-      'WCAG Accessibility',
-      'Node.js, Express',
-      'MySQL, MongoDB'
-    ],
-    datasets: [{
-      label: 'Skill Level',
-      data: [9.8, 9.7, 9.5, 9.6, 9.4, 9.2, 9.0, 9.3, 8.5, 8.0],
-      backgroundColor: [
-        '#3585B4', '#2E86AB', '#A23B72', '#F18F01', '#C73E1D',
-        '#3585B4', '#2E86AB', '#A23B72', '#F18F01', '#C73E1D'
-      ],
-      borderColor: '#0B2D48',
-      borderWidth: 2,
-      borderRadius: 6
-    }]
-  };
-
-  // Technology expertise doughnut chart
-  const techExpertiseData = {
-    labels: ['Frontend Development', 'TYPO3 CMS', 'React Ecosystem', 'Accessibility', 'Team Leadership'],
-    datasets: [{
-      data: [35, 25, 20, 15, 5],
-      backgroundColor: [
-        '#3585B4',
-        '#2E86AB', 
-        '#A23B72',
-        '#F18F01',
-        '#C73E1D'
-      ],
-      borderWidth: 0,
-      cutout: '60%'
-    }]
-  };
-
-  const techExpertiseOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom' as const,
-        labels: {
-          padding: 20,
-          usePointStyle: true,
-          font: { size: 12, weight: 'bold' as const },
-          color: '#ffffff'
-        }
-      },
-      tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#ffffff',
-        bodyColor: '#ffffff',
-        borderColor: 'rgba(255, 255, 255, 0.2)',
-        borderWidth: 1,
-        callbacks: {
-          label: function(context: { label: string; parsed: number }) {
-            return `${context.label}: ${context.parsed}%`;
-          }
-        }
-      }
-    }
-  };
-
-  const chartOptions = {
-    indexAxis: 'y' as const,
-    maintainAspectRatio: false,
-    responsive: true,
-    plugins: {
-      tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#ffffff',
-        bodyColor: '#ffffff',
-        borderColor: 'rgba(255, 255, 255, 0.2)',
-        borderWidth: 1,
-        callbacks: {
-          title: function(tooltipItems: unknown[]) {
-            const item = tooltipItems[0] as { chart: { data: { labels: string[] } }; dataIndex: number };
-            const label = item.chart.data.labels[item.dataIndex];
-            if (Array.isArray(label)) {
-              return label.join(' ');
-            }
-            return label;
-          }
-        }
-      },
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Self-Assessed Proficiency (out of 10)',
-        padding: { bottom: 20 },
-        font: { size: 14 },
-        color: '#ffffff'
-      }
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        grid: { display: false },
-        ticks: { color: '#ffffff' }
-      },
-      y: {
-        grid: { color: 'rgba(255, 255, 255, 0.1)' },
-        ticks: { color: '#ffffff', font: { weight: 'bold' as const } }
-      }
-    }
-  };
+  // Loading effect with staggered animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white antialiased relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+    <div 
+      className={`min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white antialiased transition-all duration-1000 ${
+        isLoaded ? 'opacity-100' : 'opacity-0'
+      } ${isScrolling ? 'scroll-smooth' : ''}`}
+      data-theme="dark"
+    >
+      {/* Advanced Animated Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* Dynamic Gradient Orbs */}
+        <div 
+          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"
+          style={{
+            transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
+          }}
+        ></div>
+        <div 
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"
+          style={{
+            transform: `translate(${mousePosition.x * -0.01}px, ${mousePosition.y * -0.01}px)`,
+          }}
+        ></div>
+        <div 
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+          style={{
+            transform: `translate(${mousePosition.x * 0.005}px, ${mousePosition.y * 0.005}px)`,
+          }}
+        ></div>
+        
+        {/* Animated Grid Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)`,
+              backgroundSize: '20px 20px',
+              animation: 'shimmer 20s linear infinite',
+            }}
+          ></div>
+        </div>
+        
+        {/* Floating Particles with Physics */}
+        <div className="absolute top-20 left-20 w-2 h-2 bg-white rounded-full opacity-60 animate-bounce"></div>
+        <div 
+          className="absolute top-40 right-32 w-1 h-1 bg-blue-400 rounded-full opacity-80 animate-bounce"
+          style={{ animationDelay: '1s' }}
+        ></div>
+        <div 
+          className="absolute bottom-32 left-40 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-70 animate-bounce"
+          style={{ animationDelay: '2s' }}
+        ></div>
+        <div 
+          className="absolute top-60 left-1/3 w-1 h-1 bg-pink-400 rounded-full opacity-90 animate-bounce"
+          style={{ animationDelay: '0.5s' }}
+        ></div>
+        <div 
+          className="absolute top-80 right-1/4 w-1 h-1 bg-cyan-400 rounded-full opacity-80 animate-bounce"
+          style={{ animationDelay: '1.5s' }}
+        ></div>
+        <div 
+          className="absolute bottom-60 right-20 w-1 h-1 bg-yellow-400 rounded-full opacity-70 animate-bounce"
+          style={{ animationDelay: '2.5s' }}
+        ></div>
+
+        {/* Interactive Mouse Follower */}
+        <div 
+          className="absolute w-32 h-32 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full filter blur-xl pointer-events-none transition-all duration-300 ease-out"
+          style={{
+            left: mousePosition.x - 64,
+            top: mousePosition.y - 64,
+            opacity: isScrolling ? 0.3 : 0.6,
+          }}
+        ></div>
       </div>
 
-      {/* Fixed Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-2xl">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-xl font-bold text-white flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mr-3 flex items-center justify-center">
-                <span className="text-sm font-bold text-white">AS</span>
-              </div>
-              Arun Solanki
-            </div>
-            <div className="hidden md:flex space-x-8">
-              {['overview', 'skills', 'experience', 'projects', 'education', 'contact'].map((section) => (
-                <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  className={`capitalize transition-all duration-300 px-4 py-2 rounded-full ${
-                    activeSection === section 
-                      ? 'bg-white/20 text-white font-semibold shadow-lg' 
-                      : 'text-white/80 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  {section}
-                </button>
-              ))}
-            </div>
-            <div className="md:hidden">
-              <button className="text-white/80 hover:text-white">☰</button>
-            </div>
-          </div>
+      {/* Advanced Navigation */}
+      <Navigation activeSection={activeSection} onSectionChange={setActiveSection} />
+
+      {/* Main Content Container */}
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl pt-20 relative z-10">
+        {/* Hero Section with Advanced Animations */}
+        <div className="animate-slide-in-up">
+          <HeroSection id="overview" />
         </div>
-      </nav>
 
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl pt-20">
-        
-        {/* Hero Section */}
-        <section id="overview" className="py-20 md:py-32 relative z-10">
-          <div className="text-center mb-16">
-            {/* Animated Avatar */}
-            <div className="relative inline-block mb-8">
-              <div className="w-40 h-40 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-6xl font-bold text-white shadow-2xl animate-pulse-slow">
-                AS
-              </div>
-              <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center animate-bounce">
-                <span className="text-white text-sm">✓</span>
-              </div>
-              <div className="absolute -bottom-2 -left-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
-                <span className="text-white text-lg">⭐</span>
-              </div>
-            </div>
-
-            {/* Main Title with Gradient */}
-            <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-6">
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
-                ARUN SOLANKI
-              </span>
-            </h1>
-            
-            {/* Animated Subtitle */}
-            <div className="relative">
-              <p className="text-2xl md:text-3xl font-semibold mb-4 text-white/90">
-                Frontend Team Leader
-              </p>
-              <div className="w-32 h-1 bg-gradient-to-r from-blue-400 to-purple-400 mx-auto rounded-full"></div>
-            </div>
-
-            {/* Enhanced Description */}
-            <p className="text-lg text-white/80 max-w-4xl mx-auto mb-12 leading-relaxed">
-              🚀 <strong>Passionate about creating exceptional user experiences</strong> through innovative frontend solutions. 
-              Leading teams to deliver <span className="text-yellow-300">scalable</span>, <span className="text-green-300">accessible</span>, and <span className="text-blue-300">performant</span> web applications.
-            </p>
-
-            {/* Enhanced Stats Cards */}
-            <div className="flex flex-wrap justify-center gap-6 mb-16">
-              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                <div className="text-4xl font-bold text-blue-300 mb-2 group-hover:scale-110 transition-transform duration-300">6+</div>
-                <div className="text-white/80 font-semibold">Years Experience</div>
-                <div className="text-sm text-white/60 mt-1">Frontend Development</div>
-              </div>
-              
-              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                <div className="text-4xl font-bold text-yellow-300 mb-2 group-hover:scale-110 transition-transform duration-300">⭐</div>
-                <div className="text-white/80 font-semibold">Shining Star</div>
-                <div className="text-sm text-white/60 mt-1">Award 2023</div>
-              </div>
-              
-              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                <div className="text-4xl font-bold text-green-300 mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
-                <div className="text-white/80 font-semibold">Projects</div>
-                <div className="text-sm text-white/60 mt-1">Successfully Delivered</div>
-              </div>
-
-              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                <div className="text-4xl font-bold text-purple-300 mb-2 group-hover:scale-110 transition-transform duration-300">5+</div>
-                <div className="text-white/80 font-semibold">Team Members</div>
-                <div className="text-sm text-white/60 mt-1">Currently Leading</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Contact Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-              <div className="text-blue-400 text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">📧</div>
-              <h3 className="text-xl font-bold text-white mb-3">Email</h3>
-              <p className="text-white/80 hover:text-white transition-colors">arun.solanki@nitsan.com</p>
-            </div>
-            
-            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-              <div className="text-green-400 text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">📍</div>
-              <h3 className="text-xl font-bold text-white mb-3">Location</h3>
-              <p className="text-white/80 hover:text-white transition-colors">Bhavnagar, Gujarat, India</p>
-            </div>
-            
-            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-              <div className="text-purple-400 text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">💼</div>
-              <h3 className="text-xl font-bold text-white mb-3">Company</h3>
-              <p className="text-white/80 hover:text-white transition-colors">NITSAN TECHNOLOGY</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Skills Section */}
-        <section id="skills" className="py-20 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Technical Expertise
-              </span>
-            </h2>
-            <p className="text-lg text-white/80 max-w-3xl mx-auto">
-              🎯 <strong>Comprehensive skill set</strong> spanning modern frontend technologies, CMS integration, and team leadership
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-            {/* Skills Bar Chart */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
-              <h3 className="text-2xl font-bold mb-6 text-white flex items-center">
-                <span className="text-3xl mr-3">📊</span>
-                Skill Proficiency
-              </h3>
-              <div className="relative w-full h-[500px] bg-white/5 rounded-2xl p-4">
-                <Bar ref={chartRef} data={skillsData} options={chartOptions} />
-              </div>
-            </div>
-
-            {/* Technology Expertise */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
-              <h3 className="text-2xl font-bold mb-6 text-white flex items-center">
-                <span className="text-3xl mr-3">🎯</span>
-                Technology Distribution
-              </h3>
-              <div className="relative w-full h-[500px] bg-white/5 rounded-2xl p-4">
-                <Doughnut data={techExpertiseData} options={techExpertiseOptions} />
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Skill Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🎨</div>
-              <h3 className="text-xl font-bold mb-3">Frontend Development</h3>
-              <p className="text-blue-100/80 text-sm leading-relaxed">React, Next.js, TypeScript, HTML5, CSS3, SCSS, Tailwind CSS</p>
-              <div className="mt-4 flex items-center">
-                <div className="w-full bg-white/20 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-blue-400 to-blue-500 h-2 rounded-full" style={{width: '95%'}}></div>
-                </div>
-                <span className="ml-3 text-sm font-semibold text-blue-300">95%</span>
-              </div>
-            </div>
-            
-            <div className="group bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">⚙️</div>
-              <h3 className="text-xl font-bold mb-3">CMS & Tools</h3>
-              <p className="text-purple-100/80 text-sm leading-relaxed">TYPO3, WordPress, Git, GitHub, Jira, Vercel, Netlify</p>
-              <div className="mt-4 flex items-center">
-                <div className="w-full bg-white/20 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-purple-400 to-purple-500 h-2 rounded-full" style={{width: '90%'}}></div>
-                </div>
-                <span className="ml-3 text-sm font-semibold text-purple-300">90%</span>
-              </div>
-            </div>
-            
-            <div className="group bg-gradient-to-br from-green-500/20 to-green-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-green-400/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">♿</div>
-              <h3 className="text-xl font-bold mb-3">Accessibility</h3>
-              <p className="text-green-100/80 text-sm leading-relaxed">WCAG 2.1, ARIA, Screen Readers, Audit Tools, Compliance</p>
-              <div className="mt-4 flex items-center">
-                <div className="w-full bg-white/20 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-green-400 to-green-500 h-2 rounded-full" style={{width: '93%'}}></div>
-                </div>
-                <span className="ml-3 text-sm font-semibold text-green-300">93%</span>
-              </div>
-            </div>
-            
-            <div className="group bg-gradient-to-br from-orange-500/20 to-orange-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-orange-400/30 hover:border-orange-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">👥</div>
-              <h3 className="text-xl font-bold mb-3">Team Leadership</h3>
-              <p className="text-orange-100/80 text-sm leading-relaxed">Team Management, Mentoring, Project Coordination, Agile</p>
-              <div className="mt-4 flex items-center">
-                <div className="w-full bg-white/20 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 h-2 rounded-full" style={{width: '88%'}}></div>
-                </div>
-                <span className="ml-3 text-sm font-semibold text-orange-300">88%</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Skills Section with Staggered Animation */}
+        <div className="animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
+          <SkillsSection id="skills" />
+        </div>
 
         {/* Experience Section */}
-        <section id="experience" className="py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Professional Journey
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              A progressive career path showcasing growth from Junior Developer to Frontend Team Leader
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
-              
-              <div className="space-y-12">
-                {/* Current Role */}
-                <div className="relative flex items-start">
-                  <div className="absolute left-6 top-2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white shadow-lg"></div>
-                  <div className="ml-16 bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                      <div>
-                        <span className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">2024 – Current</span>
-                        <h3 className="text-2xl font-bold text-slate-800 mt-2">Frontend Team Leader</h3>
-                        <p className="text-slate-600 font-medium">NITSAN TECHNOLOGY, Bhavnagar</p>
-                      </div>
-                      <div className="mt-4 md:mt-0">
-                        <span className="inline-block bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full">Current Role</span>
-                      </div>
-                    </div>
-                    <ul className="space-y-3 text-slate-700">
-                      <li className="flex items-start">
-                        <span className="text-blue-500 mr-3 mt-1">•</span>
-                        Leading a team of 5+ frontend developers and coordinating project deliverables across multiple client projects
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-blue-500 mr-3 mt-1">•</span>
-                        Mentoring junior developers and establishing coding standards and best practices for the team
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-blue-500 mr-3 mt-1">•</span>
-                        Managing project timelines and ensuring quality delivery of complex TYPO3 and React applications
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-blue-500 mr-3 mt-1">•</span>
-                        Collaborating with stakeholders to define technical requirements and architecture decisions
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Super Senior Role */}
-                <div className="relative flex items-start">
-                  <div className="absolute left-6 top-2 w-4 h-4 bg-purple-600 rounded-full border-4 border-white shadow-lg"></div>
-                  <div className="ml-16 bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                      <div>
-                        <span className="text-sm font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">Aug 2023 – 2024</span>
-                        <h3 className="text-2xl font-bold text-slate-800 mt-2">Super Senior Frontend Developer</h3>
-                        <p className="text-slate-600 font-medium">NITSAN TECHNOLOGY, Bhavnagar</p>
-                      </div>
-                    </div>
-                    <ul className="space-y-3 text-slate-700">
-                      <li className="flex items-start">
-                        <span className="text-purple-500 mr-3 mt-1">•</span>
-                        Developed complex TYPO3 extensions including T3AI, T3AC, T3AA, and TAL for enhanced CMS functionality
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-purple-500 mr-3 mt-1">•</span>
-                        Architected and built high-performance accessibility audit tools with Vite and TypeScript
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-purple-500 mr-3 mt-1">•</span>
-                        Led development of customer projects including HDNET and EnviTech with custom TYPO3 integrations
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-purple-500 mr-3 mt-1">•</span>
-                        Implemented advanced SCSS architecture and component-based development workflows
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Senior Role */}
-                <div className="relative flex items-start">
-                  <div className="absolute left-6 top-2 w-4 h-4 bg-indigo-600 rounded-full border-4 border-white shadow-lg"></div>
-                  <div className="ml-16 bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                      <div>
-                        <span className="text-sm font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Jan 2022 – Aug 2023</span>
-                        <h3 className="text-2xl font-bold text-slate-800 mt-2">Senior Frontend Developer</h3>
-                        <p className="text-slate-600 font-medium">NITSAN TECHNOLOGY, Bhavnagar</p>
-                      </div>
-                    </div>
-                    <ul className="space-y-3 text-slate-700">
-                      <li className="flex items-start">
-                        <span className="text-indigo-500 mr-3 mt-1">•</span>
-                        Developed dynamic web applications using React, Vue.js, and TypeScript for interactive user experiences
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-indigo-500 mr-3 mt-1">•</span>
-                        Built T3Planet e-commerce platform with deep TYPO3 CMS integration and custom extensions
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-indigo-500 mr-3 mt-1">•</span>
-                        Created Accesstive accessibility widget and live audit tools for WCAG compliance testing
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-indigo-500 mr-3 mt-1">•</span>
-                        Collaborated with UI/UX designers to translate wireframes into pixel-perfect, responsive interfaces
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Junior Role */}
-                <div className="relative flex items-start">
-                  <div className="absolute left-6 top-2 w-4 h-4 bg-slate-600 rounded-full border-4 border-white shadow-lg"></div>
-                  <div className="ml-16 bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                      <div>
-                        <span className="text-sm font-semibold text-slate-600 bg-slate-50 px-3 py-1 rounded-full">June 2019 – Jan 2022</span>
-                        <h3 className="text-2xl font-bold text-slate-800 mt-2">Junior Frontend Developer</h3>
-                        <p className="text-slate-600 font-medium">NITSAN TECHNOLOGY, Bhavnagar</p>
-                      </div>
-                    </div>
-                    <ul className="space-y-3 text-slate-700">
-                      <li className="flex items-start">
-                        <span className="text-slate-500 mr-3 mt-1">•</span>
-                        Developed responsive websites using HTML, CSS, JavaScript, and Bootstrap frameworks
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-slate-500 mr-3 mt-1">•</span>
-                        Customized WordPress projects with Elementor Pro for client-specific requirements
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-slate-500 mr-3 mt-1">•</span>
-                        Learned TYPO3 CMS fundamentals and contributed to various client projects
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-slate-500 mr-3 mt-1">•</span>
-                        Participated in code reviews and adopted Git version control and Jira project management
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <div className="animate-slide-in-up" style={{ animationDelay: '0.4s' }}>
+          <ExperienceSection id="experience" />
+        </div>
 
         {/* Projects Section */}
-        <section id="projects" className="py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Project Showcase
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              Key projects demonstrating expertise in TYPO3 CMS, React development, and accessibility solutions
-            </p>
-          </div>
+        <div className="animate-slide-in-up" style={{ animationDelay: '0.6s' }}>
+          <ProjectsSection id="projects" />
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* T3Planet */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🛒</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">T3Planet E-commerce</h3>
-              <p className="text-slate-600 mb-4">Comprehensive e-commerce platform for TYPO3 products with deep CMS integration, custom extensions, and responsive design.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">TYPO3</span>
-                <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">React</span>
-                <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">E-commerce</span>
-              </div>
-              <div className="text-sm text-slate-500">
-                <strong>Impact:</strong> Increased sales by 40% through improved user experience
-              </div>
+        {/* Education & Contact Section */}
+        <div className="animate-slide-in-up" style={{ animationDelay: '0.8s' }}>
+          <EducationContactSection id="education" />
+        </div>
+
+        {/* Advanced Footer */}
+        <footer className="py-16 text-center animate-fade-in" style={{ animationDelay: '1s' }}>
+          <div className="glass-card p-8 relative overflow-hidden group">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div 
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                }}
+              ></div>
             </div>
-
-            {/* Accesstive */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">♿</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">Accesstive Widget</h3>
-              <p className="text-slate-600 mb-4">High-performance accessibility widget with live audit capabilities for real-time WCAG compliance testing.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Accessibility</span>
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">TypeScript</span>
-                <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">WCAG 2.1</span>
+            
+            {/* Content */}
+            <div className="relative z-10">
+              <p className="text-white/80 text-lg mb-6 leading-relaxed">
+                &ldquo;Passionate about creating exceptional user experiences through innovative frontend solutions&rdquo;
+              </p>
+              
+              {/* Social Links */}
+              <div className="flex justify-center space-x-6 mb-6">
+                <a 
+                  href="https://www.linkedin.com/in/solanki-arun/" 
+                  className="text-white/60 hover:text-blue-400 transition-colors duration-300 hover:scale-110 transform"
+                  aria-label="LinkedIn Profile"
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+                <a 
+                  href="https://github.com/arunnitsan" 
+                  className="text-white/60 hover:text-gray-300 transition-colors duration-300 hover:scale-110 transform"
+                  aria-label="GitHub Profile"
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
+                <a 
+                  href="mailto:arunsolanki1463@gmail.com" 
+                  className="text-white/60 hover:text-green-400 transition-colors duration-300 hover:scale-110 transform"
+                  aria-label="Email Contact"
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-.904.732-1.636 1.636-1.636h3.819l6.545 4.91 6.545-4.91h3.819c.904 0 1.636.732 1.636 1.636z"/>
+                  </svg>
+                </a>
               </div>
-              <div className="text-sm text-slate-500">
-                <strong>Impact:</strong> Helped 100+ websites achieve WCAG compliance
-              </div>
-            </div>
-
-            {/* TYPO3 Extensions */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">⚙️</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">TYPO3 Extensions Suite</h3>
-              <p className="text-slate-600 mb-4">Developed multiple TYPO3 extensions including T3AI, T3AC, T3AA, and TAL for enhanced CMS functionality.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-1 rounded">TYPO3</span>
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">PHP</span>
-                <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">Extensions</span>
-              </div>
-              <div className="text-sm text-slate-500">
-                <strong>Impact:</strong> 10,000+ downloads across all extensions
-              </div>
-            </div>
-
-            {/* HDNET */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🏢</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">HDNET Client Project</h3>
-              <p className="text-slate-600 mb-4">Large-scale client project with complex TYPO3 integrations, custom frontend components, and responsive design.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">TYPO3</span>
-                <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">SCSS</span>
-                <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">Enterprise</span>
-              </div>
-              <div className="text-sm text-slate-500">
-                <strong>Impact:</strong> Reduced page load time by 60%
-              </div>
-            </div>
-
-            {/* EnviTech */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🌱</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">EnviTech Website</h3>
-              <p className="text-slate-600 mb-4">Environmental technology company website with custom TYPO3 development and modern frontend architecture.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">TYPO3</span>
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">JavaScript</span>
-                <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">Responsive</span>
-              </div>
-              <div className="text-sm text-slate-500">
-                <strong>Impact:</strong> 95% mobile traffic increase
-              </div>
-            </div>
-
-            {/* Live Audit */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">📊</div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800">Accesstive Live Audit</h3>
-              <p className="text-slate-600 mb-4">Real-time accessibility auditing tool with comprehensive WCAG compliance reporting and dashboard analytics.</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Analytics</span>
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Dashboard</span>
-                <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">Real-time</span>
-              </div>
-              <div className="text-sm text-slate-500">
-                <strong>Impact:</strong> 50% faster accessibility audits
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Education & Certifications Section */}
-        <section id="education" className="py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Education & Certifications
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              Academic background and professional certifications that support my technical expertise
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Education */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
-              <div className="text-4xl mb-6">🎓</div>
-              <h3 className="text-2xl font-bold mb-4 text-slate-800">Education</h3>
-              <div className="space-y-6">
-                <div className="border-l-4 border-blue-500 pl-4">
-                  <h4 className="text-lg font-semibold text-slate-800">Bachelor of Technology (B.Tech)</h4>
-                  <p className="text-slate-600">Computer Science & Engineering</p>
-                  <p className="text-sm text-slate-500">2015 - 2019</p>
-                </div>
-                <div className="border-l-4 border-green-500 pl-4">
-                  <h4 className="text-lg font-semibold text-slate-800">Higher Secondary School</h4>
-                  <p className="text-slate-600">Science Stream</p>
-                  <p className="text-sm text-slate-500">2013 - 2015</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Certifications */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
-              <div className="text-4xl mb-6">🏆</div>
-              <h3 className="text-2xl font-bold mb-4 text-slate-800">Certifications & Awards</h3>
-              <div className="space-y-4">
-                <div className="flex items-center p-3 bg-blue-50 rounded-lg">
-                  <span className="text-2xl mr-3">⭐</span>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">Shining Star of the Year</h4>
-                    <p className="text-sm text-slate-600">NITSAN TECHNOLOGY - 2023</p>
-                  </div>
-                </div>
-                <div className="flex items-center p-3 bg-green-50 rounded-lg">
-                  <span className="text-2xl mr-3">♿</span>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">WCAG 2.1 Accessibility</h4>
-                    <p className="text-sm text-slate-600">Web Content Accessibility Guidelines</p>
-                  </div>
-                </div>
-                <div className="flex items-center p-3 bg-purple-50 rounded-lg">
-                  <span className="text-2xl mr-3">⚙️</span>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">TYPO3 Certified Integrator</h4>
-                    <p className="text-sm text-slate-600">Senior Level Certification</p>
-                  </div>
-                </div>
-                <div className="flex items-center p-3 bg-orange-50 rounded-lg">
-                  <span className="text-2xl mr-3">⚛️</span>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">React.js Professional</h4>
-                    <p className="text-sm text-slate-600">Advanced React Development</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Let&apos;s Connect
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              Ready to discuss your next project or explore new opportunities
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Information */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
-              <h3 className="text-2xl font-bold mb-6 text-slate-800">Get In Touch</h3>
-              <div className="space-y-6">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                    <span className="text-blue-600 text-xl">📧</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">Email</h4>
-                    <p className="text-slate-600">arun.solanki@nitsan.com</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                    <span className="text-green-600 text-xl">📍</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">Location</h4>
-                    <p className="text-slate-600">Bhavnagar, Gujarat, India</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
-                    <span className="text-purple-600 text-xl">💼</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">Company</h4>
-                    <p className="text-slate-600">NITSAN TECHNOLOGY</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mr-4">
-                    <span className="text-orange-600 text-xl">⏰</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-800">Availability</h4>
-                    <p className="text-slate-600">Open to new opportunities</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white">
-              <h3 className="text-2xl font-bold mb-6">Quick Stats</h3>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">6+</div>
-                  <div className="text-blue-100">Years Experience</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">50+</div>
-                  <div className="text-blue-100">Projects Delivered</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">5+</div>
-                  <div className="text-blue-100">Team Members Led</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold mb-2">100%</div>
-                  <div className="text-blue-100">Client Satisfaction</div>
-                </div>
-              </div>
-              <div className="mt-8 p-4 bg-white/10 rounded-lg">
-                <p className="text-blue-100 text-center">
-                  &ldquo;Passionate about creating exceptional user experiences through innovative frontend solutions.&rdquo;
+              
+              <div className="border-t border-white/10 pt-6">
+                <p className="text-white/60 text-sm">
+                  © 2024 Arun Solanki. Interactive Resume built with React & Next.js.
+                </p>
+                <p className="text-white/40 text-xs mt-2">
+                  Designed with ❤️ using modern web technologies
                 </p>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="py-12 border-t border-slate-200 bg-white">
-          <div className="container mx-auto px-4 text-center">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-slate-800 mb-2">Arun Solanki</h3>
-              <p className="text-slate-600">Frontend Team Leader & TYPO3 Expert</p>
-            </div>
-            <div className="flex justify-center space-x-6 mb-6">
-              <a href="mailto:arun.solanki@nitsan.com" className="text-slate-600 hover:text-blue-600 transition-colors">
-                📧 Email
-              </a>
-              <a href="https://linkedin.com/in/arun-solanki" className="text-slate-600 hover:text-blue-600 transition-colors">
-                💼 LinkedIn
-              </a>
-              <a href="https://github.com/arun-solanki" className="text-slate-600 hover:text-blue-600 transition-colors">
-                🐙 GitHub
-              </a>
-            </div>
-            <p className="text-slate-500 text-sm">
-              &copy; 2025 Arun Solanki. Interactive Resume built with React & Next.js
-            </p>
-          </div>
         </footer>
       </div>
+
+      {/* Scroll Progress and Back to Top */}
+      <ScrollProgress />
     </div>
   );
 }
