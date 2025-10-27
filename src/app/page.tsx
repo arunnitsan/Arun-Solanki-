@@ -96,10 +96,15 @@ export default function Home() {
           padding: 20,
           usePointStyle: true,
           font: { size: 12, weight: 'bold' as const },
-          color: '#0B2D48'
+          color: '#ffffff'
         }
       },
       tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        borderWidth: 1,
         callbacks: {
           label: function(context: { label: string; parsed: number }) {
             return `${context.label}: ${context.parsed}%`;
@@ -115,6 +120,11 @@ export default function Home() {
     responsive: true,
     plugins: {
       tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        borderWidth: 1,
         callbacks: {
           title: function(tooltipItems: unknown[]) {
             const item = tooltipItems[0] as { chart: { data: { labels: string[] } }; dataIndex: number };
@@ -132,38 +142,50 @@ export default function Home() {
         text: 'Self-Assessed Proficiency (out of 10)',
         padding: { bottom: 20 },
         font: { size: 14 },
-        color: '#205375'
+        color: '#ffffff'
       }
     },
     scales: {
       x: {
         beginAtZero: true,
         grid: { display: false },
-        ticks: { color: '#205375' }
+        ticks: { color: '#ffffff' }
       },
       y: {
-        grid: { color: '#A2D2FF' },
-        ticks: { color: '#0B2D48', font: { weight: 'bold' as const } }
+        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+        ticks: { color: '#ffffff', font: { weight: 'bold' as const } }
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 text-slate-800 antialiased">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white antialiased relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+      </div>
+
       {/* Fixed Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-2xl">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-xl font-bold text-slate-800">Arun Solanki</div>
+            <div className="text-xl font-bold text-white flex items-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mr-3 flex items-center justify-center">
+                <span className="text-sm font-bold text-white">AS</span>
+              </div>
+              Arun Solanki
+            </div>
             <div className="hidden md:flex space-x-8">
               {['overview', 'skills', 'experience', 'projects', 'education', 'contact'].map((section) => (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
-                  className={`capitalize transition-all duration-300 ${
+                  className={`capitalize transition-all duration-300 px-4 py-2 rounded-full ${
                     activeSection === section 
-                      ? 'text-blue-600 font-semibold border-b-2 border-blue-600' 
-                      : 'text-slate-600 hover:text-blue-600'
+                      ? 'bg-white/20 text-white font-semibold shadow-lg' 
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
                   }`}
                 >
                   {section}
@@ -171,7 +193,7 @@ export default function Home() {
               ))}
             </div>
             <div className="md:hidden">
-              <button className="text-slate-600">☰</button>
+              <button className="text-white/80 hover:text-white">☰</button>
             </div>
           </div>
         </div>
@@ -180,107 +202,177 @@ export default function Home() {
       <div className="container mx-auto px-4 md:px-8 max-w-7xl pt-20">
         
         {/* Hero Section */}
-        <section id="overview" className="py-20 md:py-32">
+        <section id="overview" className="py-20 md:py-32 relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-block p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-8">
-              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-4xl font-bold text-blue-600">
+            {/* Animated Avatar */}
+            <div className="relative inline-block mb-8">
+              <div className="w-40 h-40 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-6xl font-bold text-white shadow-2xl animate-pulse-slow">
                 AS
               </div>
+              <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center animate-bounce">
+                <span className="text-white text-sm">✓</span>
+              </div>
+              <div className="absolute -bottom-2 -left-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
+                <span className="text-white text-lg">⭐</span>
+              </div>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">
-              ARUN SOLANKI
+
+            {/* Main Title with Gradient */}
+            <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-6">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
+                ARUN SOLANKI
+              </span>
             </h1>
-            <p className="text-2xl md:text-3xl font-semibold text-slate-600 mb-4">Frontend Team Leader</p>
-            <p className="text-lg text-slate-500 max-w-3xl mx-auto mb-8">
-              Passionate about creating exceptional user experiences through innovative frontend solutions. 
-              Leading teams to deliver scalable, accessible, and performant web applications.
+            
+            {/* Animated Subtitle */}
+            <div className="relative">
+              <p className="text-2xl md:text-3xl font-semibold mb-4 text-white/90">
+                Frontend Team Leader
+              </p>
+              <div className="w-32 h-1 bg-gradient-to-r from-blue-400 to-purple-400 mx-auto rounded-full"></div>
+            </div>
+
+            {/* Enhanced Description */}
+            <p className="text-lg text-white/80 max-w-4xl mx-auto mb-12 leading-relaxed">
+              🚀 <strong>Passionate about creating exceptional user experiences</strong> through innovative frontend solutions. 
+              Leading teams to deliver <span className="text-yellow-300">scalable</span>, <span className="text-green-300">accessible</span>, and <span className="text-blue-300">performant</span> web applications.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <div className="bg-white px-6 py-3 rounded-full shadow-lg border border-slate-200">
-                <span className="text-2xl font-bold text-blue-600">6+</span>
-                <span className="ml-2 text-slate-600">Years Experience</span>
+
+            {/* Enhanced Stats Cards */}
+            <div className="flex flex-wrap justify-center gap-6 mb-16">
+              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <div className="text-4xl font-bold text-blue-300 mb-2 group-hover:scale-110 transition-transform duration-300">6+</div>
+                <div className="text-white/80 font-semibold">Years Experience</div>
+                <div className="text-sm text-white/60 mt-1">Frontend Development</div>
               </div>
-              <div className="bg-white px-6 py-3 rounded-full shadow-lg border border-slate-200">
-                <span className="text-2xl font-bold text-purple-600">★</span>
-                <span className="ml-2 text-slate-600">Shining Star 2023</span>
+              
+              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <div className="text-4xl font-bold text-yellow-300 mb-2 group-hover:scale-110 transition-transform duration-300">⭐</div>
+                <div className="text-white/80 font-semibold">Shining Star</div>
+                <div className="text-sm text-white/60 mt-1">Award 2023</div>
               </div>
-              <div className="bg-white px-6 py-3 rounded-full shadow-lg border border-slate-200">
-                <span className="text-2xl font-bold text-indigo-600">50+</span>
-                <span className="ml-2 text-slate-600">Projects Delivered</span>
+              
+              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <div className="text-4xl font-bold text-green-300 mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
+                <div className="text-white/80 font-semibold">Projects</div>
+                <div className="text-sm text-white/60 mt-1">Successfully Delivered</div>
+              </div>
+
+              <div className="group bg-white/10 backdrop-blur-lg px-8 py-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <div className="text-4xl font-bold text-purple-300 mb-2 group-hover:scale-110 transition-transform duration-300">5+</div>
+                <div className="text-white/80 font-semibold">Team Members</div>
+                <div className="text-sm text-white/60 mt-1">Currently Leading</div>
               </div>
             </div>
           </div>
 
-          {/* Contact Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            <div className="bg-white p-6 rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300">
-              <div className="text-blue-600 text-2xl mb-3">📧</div>
-              <h3 className="font-semibold text-slate-800 mb-2">Email</h3>
-              <p className="text-slate-600">arun.solanki@nitsan.com</p>
+          {/* Enhanced Contact Info Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <div className="text-blue-400 text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">📧</div>
+              <h3 className="text-xl font-bold text-white mb-3">Email</h3>
+              <p className="text-white/80 hover:text-white transition-colors">arun.solanki@nitsan.com</p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300">
-              <div className="text-green-600 text-2xl mb-3">📍</div>
-              <h3 className="font-semibold text-slate-800 mb-2">Location</h3>
-              <p className="text-slate-600">Bhavnagar, Gujarat, India</p>
+            
+            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <div className="text-green-400 text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">📍</div>
+              <h3 className="text-xl font-bold text-white mb-3">Location</h3>
+              <p className="text-white/80 hover:text-white transition-colors">Bhavnagar, Gujarat, India</p>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300">
-              <div className="text-purple-600 text-2xl mb-3">💼</div>
-              <h3 className="font-semibold text-slate-800 mb-2">Company</h3>
-              <p className="text-slate-600">NITSAN TECHNOLOGY</p>
+            
+            <div className="group bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <div className="text-purple-400 text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">💼</div>
+              <h3 className="text-xl font-bold text-white mb-3">Company</h3>
+              <p className="text-white/80 hover:text-white transition-colors">NITSAN TECHNOLOGY</p>
             </div>
           </div>
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="py-20">
+        <section id="skills" className="py-20 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Technical Expertise
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Technical Expertise
+              </span>
             </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-              Comprehensive skill set spanning modern frontend technologies, CMS integration, and team leadership
+            <p className="text-lg text-white/80 max-w-3xl mx-auto">
+              🎯 <strong>Comprehensive skill set</strong> spanning modern frontend technologies, CMS integration, and team leadership
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             {/* Skills Bar Chart */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
-              <h3 className="text-2xl font-bold mb-6 text-slate-800">Skill Proficiency</h3>
-              <div className="relative w-full h-[500px]">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <h3 className="text-2xl font-bold mb-6 text-white flex items-center">
+                <span className="text-3xl mr-3">📊</span>
+                Skill Proficiency
+              </h3>
+              <div className="relative w-full h-[500px] bg-white/5 rounded-2xl p-4">
                 <Bar ref={chartRef} data={skillsData} options={chartOptions} />
               </div>
             </div>
 
             {/* Technology Expertise */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
-              <h3 className="text-2xl font-bold mb-6 text-slate-800">Technology Distribution</h3>
-              <div className="relative w-full h-[500px]">
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <h3 className="text-2xl font-bold mb-6 text-white flex items-center">
+                <span className="text-3xl mr-3">🎯</span>
+                Technology Distribution
+              </h3>
+              <div className="relative w-full h-[500px] bg-white/5 rounded-2xl p-4">
                 <Doughnut data={techExpertiseData} options={techExpertiseOptions} />
               </div>
             </div>
           </div>
 
-          {/* Skill Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
-              <div className="text-3xl mb-4">🎨</div>
-              <h3 className="text-xl font-bold mb-2">Frontend</h3>
-              <p className="text-blue-100">React, Next.js, TypeScript, HTML5, CSS3, SCSS</p>
+          {/* Enhanced Skill Categories */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="group bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-blue-400/30 hover:border-blue-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">🎨</div>
+              <h3 className="text-xl font-bold mb-3">Frontend Development</h3>
+              <p className="text-blue-100/80 text-sm leading-relaxed">React, Next.js, TypeScript, HTML5, CSS3, SCSS, Tailwind CSS</p>
+              <div className="mt-4 flex items-center">
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-blue-400 to-blue-500 h-2 rounded-full" style={{width: '95%'}}></div>
+                </div>
+                <span className="ml-3 text-sm font-semibold text-blue-300">95%</span>
+              </div>
             </div>
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg">
-              <div className="text-3xl mb-4">⚙️</div>
-              <h3 className="text-xl font-bold mb-2">CMS & Tools</h3>
-              <p className="text-purple-100">TYPO3, WordPress, Git, Jira, Vercel</p>
+            
+            <div className="group bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">⚙️</div>
+              <h3 className="text-xl font-bold mb-3">CMS & Tools</h3>
+              <p className="text-purple-100/80 text-sm leading-relaxed">TYPO3, WordPress, Git, GitHub, Jira, Vercel, Netlify</p>
+              <div className="mt-4 flex items-center">
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-purple-400 to-purple-500 h-2 rounded-full" style={{width: '90%'}}></div>
+                </div>
+                <span className="ml-3 text-sm font-semibold text-purple-300">90%</span>
+              </div>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg">
-              <div className="text-3xl mb-4">♿</div>
-              <h3 className="text-xl font-bold mb-2">Accessibility</h3>
-              <p className="text-green-100">WCAG 2.1, ARIA, Screen Readers, Audit Tools</p>
+            
+            <div className="group bg-gradient-to-br from-green-500/20 to-green-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-green-400/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">♿</div>
+              <h3 className="text-xl font-bold mb-3">Accessibility</h3>
+              <p className="text-green-100/80 text-sm leading-relaxed">WCAG 2.1, ARIA, Screen Readers, Audit Tools, Compliance</p>
+              <div className="mt-4 flex items-center">
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-green-400 to-green-500 h-2 rounded-full" style={{width: '93%'}}></div>
+                </div>
+                <span className="ml-3 text-sm font-semibold text-green-300">93%</span>
+              </div>
             </div>
-            <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl shadow-lg">
-              <div className="text-3xl mb-4">👥</div>
-              <h3 className="text-xl font-bold mb-2">Leadership</h3>
-              <p className="text-orange-100">Team Management, Mentoring, Project Coordination</p>
+            
+            <div className="group bg-gradient-to-br from-orange-500/20 to-orange-600/20 backdrop-blur-lg text-white p-8 rounded-2xl border border-orange-400/30 hover:border-orange-400/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">👥</div>
+              <h3 className="text-xl font-bold mb-3">Team Leadership</h3>
+              <p className="text-orange-100/80 text-sm leading-relaxed">Team Management, Mentoring, Project Coordination, Agile</p>
+              <div className="mt-4 flex items-center">
+                <div className="w-full bg-white/20 rounded-full h-2">
+                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 h-2 rounded-full" style={{width: '88%'}}></div>
+                </div>
+                <span className="ml-3 text-sm font-semibold text-orange-300">88%</span>
+              </div>
             </div>
           </div>
         </section>
