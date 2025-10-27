@@ -29,6 +29,12 @@ export default function EducationContactSection({ id }: EducationContactSectionP
       year: '2023',
       description: 'Recognized for exceptional leadership and project delivery excellence.'
     },
+    {
+      title: 'Best Performance of the Month',
+      issuer: 'NITSAN TECHNOLOGY',
+      year: 'June 2024',
+      description: 'Awarded for outstanding performance and dedication in project delivery during June 2024.'
+    }
   ];
 
   return (
