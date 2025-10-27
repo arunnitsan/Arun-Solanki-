@@ -18,7 +18,7 @@ export default function ExperienceSection({ id }: ExperienceSectionProps) {
       ]
     },
     {
-      title: 'Super Senior Web & Mobile Developer',
+      title: 'Super Senior Developer',
       company: 'NITSAN TECHNOLOGY',
       period: '2023 - 2025',
       description: 'Drove the technical direction for major enterprise projects, ensuring scalable and maintainable frontend architecture.',

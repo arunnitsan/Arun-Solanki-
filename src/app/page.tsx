@@ -228,7 +228,7 @@ export default function Home() {
               
               <div className="border-t border-white/10 pt-6">
                 <p className="text-white/60 text-sm">
-                  © 2024 Arun Solanki. Interactive Resume built with React & Next.js.
+                  © 2025 Arun Solanki. Interactive Resume built with React & Next.js.
                 </p>
                 <p className="text-white/40 text-xs mt-2">
                   Designed with ❤️ using modern web technologies

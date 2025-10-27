@@ -34,9 +34,9 @@ export default function HeroSection({ id }: HeroSectionProps) {
         <div className="max-w-5xl mx-auto mb-12 sm:mb-16 px-4">
           <p className="text-lg sm:text-xl text-white/90 leading-relaxed mb-4 sm:mb-6">
             <svg className="inline w-5 h-5 mr-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" clipRule="evenodd" />
             </svg>
-            <strong className="text-yellow-300">Serving as the Frontend Team Leader</strong> at NITSAN TECHNOLOGY, I fuse deep expertise in <span className="text-blue-300 font-semibold">TYPO3 CMS</span> and core web foundations with modern framework capabilities (React/Vue), delivering <span className="text-green-300 font-semibold">secure</span>, <span className="text-purple-300 font-semibold">highly available</span>, and <span className="text-pink-300 font-semibold">complex enterprise</span> digital solutions.
+            <strong className="text-yellow-300">Serving as the Frontend Team Leader</strong> at NITSAN TECHNOLOGY, I fuse deep expertise in <span className="text-blue-300 font-semibold">TYPO3 CMS</span> and core web foundations with modern framework capabilities (React), delivering <span className="text-green-300 font-semibold">secure</span>, <span className="text-purple-300 font-semibold">highly available</span>, and <span className="text-pink-300 font-semibold">complex enterprise</span> digital solutions.
           </p>
           <p className="text-base sm:text-lg text-white/80 italic">
             &ldquo;Precision & Scale in Enterprise Development&rdquo;
