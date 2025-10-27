@@ -9,7 +9,7 @@ export default function ExperienceSection({ id }: ExperienceSectionProps) {
     {
       title: 'Team Leader (Frontend)',
       company: 'NITSAN TECHNOLOGY',
-      period: '2025 - Current',
+      period: 'March 2025 - September 2025',
       description: 'Lead 5+ developers, defining technical standards, project roadmaps, and sprint execution.',
       achievements: [
         'Technical & Team Strategy: Lead 5+ developers, defining technical standards, project roadmaps, and sprint execution',

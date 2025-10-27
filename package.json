@@ -1,7 +1,7 @@
 {
-  "name": "arun-solanki-resume",
+  "name": "arun-solanki",
   "version": "1.0.0",
-  "description": "Arun Solanki - Frontend Team Leader Resume",
+  "description": "Arun Solanki - Frontend Team Leader",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

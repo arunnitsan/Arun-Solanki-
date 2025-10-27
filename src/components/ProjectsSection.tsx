@@ -46,7 +46,7 @@ export default function ProjectsSection({ id }: ProjectsSectionProps) {
       title: 'NovaOrbit - Shopping App',
       description: 'Comprehensive full-stack shopping application featuring mobile app, admin dashboard for data management, and Node.js Express API with MongoDB integration. Developed with AI-assisted coding for enhanced efficiency and innovation.',
       technologies: ['React Native', 'Node.js', 'Express.js', 'MongoDB', 'React', 'AI-Assisted Development', 'Mobile App', 'Admin Dashboard'],
-      impact: 'Delivered complete e-commerce solution with AI-powered development approach, reducing development time by 40% and achieving $100+ cost savings through intelligent code generation.',
+      impact: 'Delivered complete e-commerce solution with AI-powered development approach, achieving significant development efficiency improvements through intelligent code generation.',
       color: 'blue',
       url: 'https://github.com/arunnitsan/NovaOrbit'
     },

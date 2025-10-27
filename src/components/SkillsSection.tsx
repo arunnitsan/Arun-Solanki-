@@ -27,7 +27,7 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
     ],
     datasets: [{
       label: 'Skill Level',
-      data: [9.9, 9.8, 9.7, 9.7, 9.6, 9.5, 9.5, 9.5, 9.0, 9.0],
+      data: [9.5, 9.2, 9.0, 8.8, 9.3, 9.1, 8.9, 8.7, 8.5, 8.6],
       backgroundColor: [
         'rgba(59, 130, 246, 0.8)',
         'rgba(147, 51, 234, 0.8)',
@@ -185,7 +185,7 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
         <div className="group bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20 hover:border-blue-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20">
           <div className="text-blue-400 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.666.804 4.332a1 1 0 01-1.53 1.057L10 18.5l-3.617 1.555a1 1 0 01-1.53-1.057l.804-4.332L6.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           </div>
           <h4 className="text-xl font-bold text-white mb-3">Frontend Development</h4>
@@ -200,7 +200,7 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
         <div className="group bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20">
           <div className="text-purple-400 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
             </svg>
           </div>
           <h4 className="text-xl font-bold text-white mb-3">CMS & Tools</h4>
@@ -215,7 +215,7 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
         <div className="group bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20 hover:border-green-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20">
           <div className="text-green-400 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 4 4 0 015.3-3.7A9.963 9.963 0 0110 4c4.042 0 7.5 2.5 9 6a8.97 8.97 0 01-1 4zM8 9a1 1 0 100-2 1 1 0 000 2zm4 0a1 1 0 100-2 1 1 0 000 2zm-4 4a1 1 0 100-2 1 1 0 000 2zm4 0a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
             </svg>
           </div>
           <h4 className="text-xl font-bold text-white mb-3">Accessibility</h4>
@@ -230,15 +230,17 @@ export default function SkillsSection({ id }: SkillsSectionProps) {
         <div className="group bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/20 hover:border-yellow-400/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/20">
           <div className="text-yellow-400 text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+              <path fillRule="evenodd" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" clipRule="evenodd" />
             </svg>
           </div>
           <h4 className="text-xl font-bold text-white mb-3">Team Leadership</h4>
           <ul className="text-white/80 space-y-2 text-sm">
             <li>Team Management</li>
             <li>Mentoring</li>
-            <li>Project Coordination</li>
-            <li>Agile</li>
+            <li>Task Distribution</li>
+            <li>Code Review</li>
+            <li>Project Estimation</li>
+            <li>Agile Methodology</li>
           </ul>
         </div>
       </div>
