@@ -73,7 +73,7 @@ export default function Home() {
 
   return (
     <div 
-      className={`min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white antialiased transition-all duration-1000 ${
+      className={`min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black text-white antialiased transition-all duration-1000 ${
         isLoaded ? 'opacity-100' : 'opacity-0'
       } ${isScrolling ? 'scroll-smooth' : ''}`}
       data-theme="dark"
@@ -82,19 +82,19 @@ export default function Home() {
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Dynamic Gradient Orbs */}
         <div 
-          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"
+          className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
           style={{
             transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
           }}
         ></div>
         <div 
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"
+          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-r from-slate-600 to-gray-700 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse"
           style={{
             transform: `translate(${mousePosition.x * -0.01}px, ${mousePosition.y * -0.01}px)`,
           }}
         ></div>
         <div 
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-pulse"
           style={{
             transform: `translate(${mousePosition.x * 0.005}px, ${mousePosition.y * 0.005}px)`,
           }}

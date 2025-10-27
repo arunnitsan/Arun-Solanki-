@@ -30,12 +30,12 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-xl border-b border-white/10 shadow-2xl">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="text-xl font-bold text-white flex items-center group">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mr-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-              <span className="text-sm font-bold text-white">AS</span>
+          <div className="text-lg sm:text-xl font-bold text-white flex items-center group">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mr-2 sm:mr-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <span className="text-xs sm:text-sm font-bold text-white">AS</span>
             </div>
             <span className="group-hover:text-blue-300 transition-colors duration-300">Arun Solanki</span>
           </div>
@@ -63,7 +63,7 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors duration-300"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>

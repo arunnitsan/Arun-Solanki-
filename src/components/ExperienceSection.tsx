@@ -61,7 +61,7 @@ export default function ExperienceSection({ id }: ExperienceSectionProps) {
           </span>
         </h2>
         <p className="text-xl text-white/80 max-w-3xl mx-auto">
-          A progressive career path showcasing growth from junior developer to team leader
+          A clear progression showing continuous growth from deep technical development into a strategic leadership role.
         </p>
       </div>
 

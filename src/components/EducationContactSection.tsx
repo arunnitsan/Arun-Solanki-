@@ -7,18 +7,18 @@ interface EducationContactSectionProps {
 export default function EducationContactSection({ id }: EducationContactSectionProps) {
   const education = [
     {
-      degree: 'Bachelor of Technology (B.Tech)',
-      field: 'Computer Science & Engineering',
-      institution: 'Gujarat Technological University',
-      period: '2015 - 2019',
+      degree: 'Bachelor of Computer Applications (BCA)',
+      field: 'Computer Science & Applications',
+      institution: 'Maharaja Krishnakumarsinhji Bhavnagar University (MKB)',
+      period: '2016 - 2019',
       description: 'Focused on software engineering, data structures, algorithms, and web technologies.'
     },
     {
       degree: 'Higher Secondary School',
-      field: 'Science Stream',
-      institution: 'Gujarat Secondary Education Board',
-      period: '2013 - 2015',
-      description: 'Completed with distinction in Mathematics, Physics, and Chemistry.'
+      field: 'Commerce Stream',
+      institution: 'Gujarat Secondary and Higher Secondary Education Board',
+      period: '2014 - 2016',
+      description: 'Completed with distinction in Commerce.'
     }
   ];
 
@@ -29,24 +29,6 @@ export default function EducationContactSection({ id }: EducationContactSectionP
       year: '2023',
       description: 'Recognized for exceptional leadership and project delivery excellence.'
     },
-    {
-      title: 'WCAG 2.1 Accessibility Certification',
-      issuer: 'Web Accessibility Initiative',
-      year: '2022',
-      description: 'Certified in web accessibility standards and inclusive design practices.'
-    },
-    {
-      title: 'TYPO3 Certified Integrator',
-      issuer: 'TYPO3 Association',
-      year: '2021',
-      description: 'Senior level certification in TYPO3 CMS development and integration.'
-    },
-    {
-      title: 'React.js Professional',
-      issuer: 'Meta (Facebook)',
-      year: '2020',
-      description: 'Advanced React development certification covering hooks, context, and performance optimization.'
-    }
   ];
 
   return (
